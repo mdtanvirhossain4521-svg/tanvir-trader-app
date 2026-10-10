@@ -1,0 +1,20 @@
+workflows:
+  android-debug-workflow:
+    name: Tanvir Trader 99 Android Build
+    max_build_duration: 30
+    environment:
+      android_signing:
+      python: 3.10
+      node: latest
+    scripts:
+      - name: Install dependencies
+        script: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libssl-dev git zlib1g-dev libffi-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev
+          pip install --upgrade pip
+          pip install cython==0.29.33 buildozer
+      - name: Build APK with Buildozer
+        script: |
+          buildozer -v android debug
+    artifacts:
+      - bin/*.apk
