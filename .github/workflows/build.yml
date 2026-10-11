@@ -7,20 +7,25 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    container:
+      image: kivy/buildozer:latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Build with Buildozer Action
-      uses: ArtemSydoryk/buildozer-action@v1.2
-      with:
-        command: buildozer -v android debug
-        repository_root: .
+    - name: Fix Directory Permissions
+      run: |
+        git config --global --add safe.directory /__w/tanvir-trader-app/tanvir-trader-app
+
+    - name: Build APK with Buildozer
+      run: |
+        yes | buildozer -v android debug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: tanvir-trader-apk
         path: bin/*.apk
+        if-no-files-found: ignore
