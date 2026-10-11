@@ -23,12 +23,15 @@ jobs:
       run: |
         yes | buildozer -v android debug
 
-    - name: List Output Files
+    - name: Show Log on Failure
+      if: failure()
       run: |
-        ls -la bin/ || true
+        echo "=== BUILD FAILED. CHECKING LOGS ==="
+        find . -name "build.log" -exec tail -n 100 {} + || true
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: tanvir-trader-apk
-        path: bin/
+        path: bin/*.apk
+        if-no-files-found: ignore
