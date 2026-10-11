@@ -7,37 +7,20 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Build with Buildozer Action
+      uses: ArtemSydoryk/buildozer-action@v1.2
       with:
-        python-version: '3.10'
-
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev libssl-dev openssl libffi-dev zlib1g-dev libreadline-dev libncurses5-dev libncursesw5-dev libgdbm-dev libgdbm-compat-dev libglu1-mesa-dev libx11-dev libxext-dev libpcre3-dev liblzma-dev openjdk-17-jdk ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixin-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev zip unzip
-        pip install --upgrade pip
-        pip install "cython<3.0.0" buildozer
-
-    - name: Accept SDK Licenses & Configure Spec
-      run: |
-        if [ -f buildozer.spec ]; then
-          sed -i 's/# android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
-        fi
-
-    - name: Build with Buildozer
-      run: |
-        yes | buildozer -v android debug
+        command: buildozer -v android debug
+        repository_root: .
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: tanvir-trader-apk
         path: bin/*.apk
-        if-no-files-found: ignore
