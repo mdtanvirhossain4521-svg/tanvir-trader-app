@@ -10,32 +10,27 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'zulu'
-        java-version: '17'
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential libssl-dev git zlib1g-dev libffi-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev
+        sudo apt-get install -y build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev libssl-dev openssl libffi-dev zlib1g-dev libreadline-dev libncurses5-dev libncursesw5-dev libgdbm-dev libgdbm-compat-dev libglu1-mesa-dev libx11-dev libxext-dev libpcre3-dev liblzma-dev openjdk-17-jdk ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixin-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev
         pip install --upgrade pip
         pip install cython==0.29.33 buildozer
 
-    - name: Build APK with Buildozer
+    - name: Build with Buildozer
       run: |
         buildozer -v android debug
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v3
       with:
-        name: Tanvir-Trader-99-APK
+        name: tanvir-trader-app-apk
         path: bin/*.apk
